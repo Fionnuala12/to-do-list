@@ -46,7 +46,7 @@ app.get("/", async (req, res) => {
     const itemsResult = await db.query("SELECT * FROM items WHERE list_id = $1 ORDER BY id ASC", 
       [listId]);
     const items = itemsResult.rows;
-    console.log(items); // Get tasks
+    console.log("Get items:", items); // Get tasks
   
     res.render("index.ejs", {
       lists: listsResult.rows, // All lists
@@ -93,12 +93,14 @@ app.post("/edit", async (req, res) => {
 
 // Delete post
 app.post("/delete", async (req, res) => {
-  const deleteId = req.body.deleteItemId; 
-  console.log(deleteId); 
+  const deleteId = req.body.deleteItemId;
+  console.log("deleteId:", deleteId);
+  const listId = Number(req.body.listId); 
+  console.log("ListId:", listId);
   
   try {
-    await db.query("DELETE FROM items WHERE id = ($1)", [deleteId]);
-    res.redirect("/");
+    await db.query("DELETE FROM items WHERE id = $1", [deleteId]);
+    res.redirect("/?list=" + listId);
   } catch(err) {
     console.log(err);
   }
