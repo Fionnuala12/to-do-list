@@ -1,15 +1,13 @@
 <%- include('partials/header.ejs'); -%>
 
-<form class="list-tab" action="/list" method="get">
+<form class="list-tab" action="./" method="get">
   <% lists.forEach(function(list) { %>
-    <input type="submit" name="list" value="<%= list.id %>" id="<%= list.id %>">
-    <label for ="<% list.id %>"> <%= list.name %></label> 
+    <input type="submit" name="list" value="<%= list.id %>">
+    <label> <%= list.name %> </label>
   <% }) %>
-
-  <input type="submit" name="add" value="new" id="tab">
-        <label for="tab">Add Family Member</label>
-
 </form>
+
+
 
   <div class="main-doc">
   <div class="box" id="heading">
@@ -42,7 +40,7 @@
 
         <form class="item" action="/add" method="post">
           <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
-          <button class="add" type="submit" name="list" value=<%=listTitle %> >+</button>
+          <button class="add" type="submit" name="list" value=<%= listId %> >+</button>
         </form>
       </div>
   </div>

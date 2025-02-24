@@ -23,8 +23,6 @@ let items = [
   { id: 2, title: "Finish homework" },
 ];
 
-let lists = 1;
-
 /* async function getCurrentList(req) {
   try {
   const listId = req.body.list;
@@ -37,36 +35,41 @@ let lists = 1;
   }
 } */ 
 
-async function getCurrentList() {
-  
-}
 
 app.get("/", async (req, res) => {
   
   try {
-    const getList = await getCurrentList(req); // get current list 
+    const listId = Number(req.query.list) || 1; 
+
     const listsResult = await db.query("SELECT * FROM lists"); // Get all lists 
+    const selectedListResult = await db.query("SELECT * FROM lists WHERE id = $1", [listId]); // Get selected list
     const itemsResult = await db.query("SELECT * FROM items WHERE list_id = $1 ORDER BY id ASC", 
-      [getList]
-    );
+      [listId]);
+    const items = itemsResult.rows;
+    console.log(items); // Get tasks
   
     res.render("index.ejs", {
-      listTitle: "Today", 
-      listItems: itemsResult.rows, 
-      lists: listsResult.rows
+      lists: listsResult.rows, // All lists
+      listTitle: selectedListResult.rows[0]?.name || "Today", // Selected list name
+      listItems: items, // Tasks for selected list
+      listId: listId 
     });
   } catch(err) {
-    console.log(err);
+    console.error("Error fetching data:", err);
+    res.status(500).send("Internal Server Error");
   }
 });
+
+
 
 // Add new post 
 app.post("/add", async (req, res) => {
   const item = req.body.newItem;
-  console.log(item);
+  const listId = Number(req.body.list);
   try {
-    await db.query("INSERT INTO items (title) VALUES ($1)", [item]);
-    res.redirect("/");
+    console.log("Request body:", req.body);
+    await db.query("INSERT INTO items (title, list_id) VALUES ($1, $2)",[item, listId]);
+    res.redirect("/?list=" + listId);
   } catch(err) {
     console.log(err);
   }
@@ -111,6 +114,8 @@ app.post("/user", async (req, res) => {
     res.redirect("/");
   }
 }); */ 
+
+app.p
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
