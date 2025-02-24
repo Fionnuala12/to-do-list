@@ -23,19 +23,6 @@ let items = [
   { id: 2, title: "Finish homework" },
 ];
 
-/* async function getCurrentList(req) {
-  try {
-  const listId = req.body.list;
-  console.log(listId); 
-  const result = await db.query("SELECT * FROM lists WHERE id = ($1)", [listId]);
-  console.log(result.rows[0]);
-  return result.rows[0];
-  } catch(err) {
-    console.log(err);
-  }
-} */ 
-
-
 app.get("/", async (req, res) => {
   
   try {
@@ -54,6 +41,7 @@ app.get("/", async (req, res) => {
       listItems: items, // Tasks for selected list
       listId: listId 
     });
+
   } catch(err) {
     console.error("Error fetching data:", err);
     res.status(500).send("Internal Server Error");
@@ -73,19 +61,19 @@ app.post("/add", async (req, res) => {
   } catch(err) {
     console.log(err);
   }
-  /* items.push({ title: item });
-  res.redirect("/"); */ 
 });
 
 // Edit post 
 app.post("/edit", async (req, res) => {
   const editId = req.body.updatedItemId; 
   const editTitle = req.body.updatedItemTitle;
+  const listId = Number(req.body.listId);
   console.log(editId, editTitle);
+  console.log("listId:", listId)
 
   try {
     await db.query("UPDATE items SET title = ($1) WHERE id = ($2)", [editTitle, editId]);
-    res.redirect("/");
+    res.redirect("/?list=" + listId);
   } catch(err) {
     console.log(err);
   }  
