@@ -4,16 +4,17 @@ html {
   min-height: 1000px;
   font-family: "helvetica neue";
 }
+
 body {
   display: flex;
   flex-direction: column;
   justify-content: stretch;
   min-height: 95vh;
 }
-main {
-  text-align: center;
-  flex: 1 0 auto;
-}
+
+
+
+
 h1 {
   color: #fff;
   padding: 10px;

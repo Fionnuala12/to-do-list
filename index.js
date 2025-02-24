@@ -23,15 +23,37 @@ let items = [
   { id: 2, title: "Finish homework" },
 ];
 
-app.get("/", async (req, res) => {
+let lists = 1;
+
+/* async function getCurrentList(req) {
   try {
-    const result = await db.query("SELECT * FROM items ORDER BY id ASC"); 
-    // console.log(result.rows);
-    const items = result.rows; 
+  const listId = req.body.list;
+  console.log(listId); 
+  const result = await db.query("SELECT * FROM lists WHERE id = ($1)", [listId]);
+  console.log(result.rows[0]);
+  return result.rows[0];
+  } catch(err) {
+    console.log(err);
+  }
+} */ 
+
+async function getCurrentList() {
+  
+}
+
+app.get("/", async (req, res) => {
+  
+  try {
+    const getList = await getCurrentList(req); // get current list 
+    const listsResult = await db.query("SELECT * FROM lists"); // Get all lists 
+    const itemsResult = await db.query("SELECT * FROM items WHERE list_id = $1 ORDER BY id ASC", 
+      [getList]
+    );
   
     res.render("index.ejs", {
       listTitle: "Today", 
-      listItems: items
+      listItems: itemsResult.rows, 
+      lists: listsResult.rows
     });
   } catch(err) {
     console.log(err);
@@ -78,6 +100,17 @@ app.post("/delete", async (req, res) => {
     console.log(err);
   }
 });
+
+// New List 
+/*
+app.post("/user", async (req, res) => {
+  if( req.body.add === "new") {
+    res.render("new.ejs")
+  } else {
+    currentUserId = req.body.list;
+    res.redirect("/");
+  }
+}); */ 
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
