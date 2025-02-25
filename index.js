@@ -39,7 +39,8 @@ app.get("/", async (req, res) => {
       lists: listsResult.rows, // All lists
       listTitle: selectedListResult.rows[0]?.name || "Today", // Selected list name
       listItems: items, // Tasks for selected list
-      listId: listId 
+      listId: listId, 
+      color: listsResult.rows[0]?.color 
     });
 
   } catch(err) {
@@ -94,18 +95,28 @@ app.post("/delete", async (req, res) => {
   }
 });
 
-// New List 
-/*
-app.post("/user", async (req, res) => {
-  if( req.body.add === "new") {
-    res.render("new.ejs")
-  } else {
-    currentUserId = req.body.list;
-    res.redirect("/");
-  }
-}); */ 
 
-app.p
+// Render new.ejs
+app.post("/newList", async (req, res) => {
+  if(req.body.add === "new") {
+    res.render("new.ejs");
+  } else {
+    console.log("error");
+  }
+});
+
+// Add a new list
+app.post("/new", async (req, res) => {
+  const name = req.body.name; 
+  const color = req.body.color; 
+
+  const newList = await db.query(
+    "INSERT INTO lists (name, color) VALUES ($1, $2) RETURNING *;",
+    [name, color]
+  );
+
+  res.redirect("/");
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

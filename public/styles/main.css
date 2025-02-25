@@ -1,7 +1,8 @@
 html {
-  background-color: #e4e9fd;
-  background-image: -webkit-linear-gradient(65deg, #a683e3 50%, #e4e9fd 50%);
-  min-height: 1000px;
+  background-color: #ffffff;
+  opacity: 0.8;
+  background-image: radial-gradient(#444cf7 2px, #ffffff 2px);
+  background-size: 40px 40px;
   font-family: "helvetica neue";
 }
 
@@ -10,13 +11,45 @@ body {
   flex-direction: column;
   justify-content: stretch;
   min-height: 95vh;
+  width: 100%;
+}
+
+.list-tab {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.list-btn {
+  border-radius: 5px;
+  border: 0;
+  padding: 15px;
+  color: #ffffff;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+.list-btn.new {
+  background-color: #00204a;
+}
+
+.list-btn:hover {
+  transform: scale(1.05);  
 }
 
 
 
+main {
+  text-align: center;
+  flex: 1 0 auto;
+}
 
 h1 {
-  color: #fff;
+  color: #FFF !important;
   padding: 10px;
 }
 
@@ -25,13 +58,37 @@ h1 {
   margin: 50px auto;
   background: white;
   border-radius: 5px;
-  box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
+  box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.5);
+}
+
+.list-box {
+  border: solid 1px grey;
+}
+
+@media (max-width: 700px) {
+
+  .list-tab {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .list-btn.new  {
+    display: block;
+    margin: 0 auto;
+    margin-top: 10px;
+  }
+
+  .box {
+    margin: 20px;
+  }
+  
 }
 
 #heading {
-  background-color: #a683e3;
+  background-color: #6F84D3;
   text-align: center;
 }
+
 form.edit {
   display: flex;
 }
@@ -69,7 +126,7 @@ button.add {
   width: 50px;
   border-radius: 50%;
   border-color: transparent;
-  background-color: #a683e3;
+  background-color: #6F84D3;
   color: #fff;
   font-size: 30px;
   border-width: 0;
@@ -99,11 +156,11 @@ input[type="text"] {
 
 input[type="text"]:focus {
   outline: none;
-  box-shadow: inset 0 -3px 0 0 #a683e3;
+  box-shadow: inset 0 -3px 0 0 #6F84D3;
 }
 
 ::placeholder {
-  color: lightgray;
+  color: #000;
   opacity: 1;
 }
 
