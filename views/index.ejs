@@ -10,21 +10,27 @@
 </form>
 
 <form class="list-tab" action="/newList" method="post">  
-  <button type="submit" name="add" value="new" id="tab" class="list-btn new">
-    Add New List 
+  <button type="submit" name="add" value="new" id="tab" class="new-list-btn list-btn">
+    <span>Add New List </span>
   </button> 
   
 </form>
 
 
 
- 
-  <div class="box" id="heading">
+<div class="container">
+  <div class="heading" id="heading">
+    <div class="heading-img"><img src="/assets/icons/laptop.svg" alt="laptop image"> </div>
     <h1>
       <%= locals.listTitle %>
     </h1>
   </div>
-  <div class="box list-box">
+  <div class="form box list-box">
+    <form class="new-item" action="/add" method="post">
+      <input class="form-input" type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
+      <button class="add" type="submit" name="list" value=<%= listId %> > <span>Submit</span> </button>
+    </form>
+
     <% for(let item of listItems){%>
       <div class="item">
         <form action="/delete" method="post">
@@ -49,11 +55,9 @@
       </div>
       <% } %>
 
-        <form class="item" action="/add" method="post">
-          <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
-          <button class="add" type="submit" name="list" value=<%= listId %> >+</button>
-        </form>
+       
       </div>
+    </div>
     </main>
 
 
