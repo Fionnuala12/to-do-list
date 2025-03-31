@@ -3,13 +3,13 @@ import bodyParser from "body-parser";
 import pg from "pg";
 import 'dotenv/config';
 
-const { Pool } = require("pg");
+const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false, // Needed for some hosted PostgreSQL services
-  },
+  ssl: process.env.DATABASE_URL.includes("localhost")
+    ? false
+    : { rejectUnauthorized: false }, // Required for Railway
 });
 
 module.exports = pool;
