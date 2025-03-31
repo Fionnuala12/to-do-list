@@ -12,7 +12,7 @@ const pool = new Pool({
     : { rejectUnauthorized: false }, // Required for Railway
 });
 
-module.exports = pool;
+export default pool;
 
 
 const app = express();
