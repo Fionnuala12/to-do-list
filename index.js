@@ -1,18 +1,16 @@
 import express from "express";
 import bodyParser from "body-parser";
-import pkg from "pg";
+import pg from "pg";
 import 'dotenv/config';
 
-const { Pool } = pkg;
-
-const pool = new Pool ({ 
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+const db = new pg.Client({
+  user: "postgres",
+  host: "localhost",
+  database: "blog",
+  password: process.env.SQL_PASSWORD,
+  port: 5432,
 });
-
-export default pool;
+db.connect();
 
 const app = express();
 const port = 3000;
@@ -31,9 +29,9 @@ app.get("/", async (req, res) => {
   try {
     const listId = Number(req.query.list) || 1; 
 
-    const listsResult = await pool.query("SELECT * FROM lists"); // Get all lists 
-    const selectedListResult = await pool.query("SELECT * FROM lists WHERE id = $1", [listId]); // Get selected list
-    const itemsResult = await pool.query("SELECT * FROM items WHERE list_id = $1 ORDER BY id ASC", 
+    const listsResult = await db.query("SELECT * FROM lists"); // Get all lists 
+    const selectedListResult = await db.query("SELECT * FROM lists WHERE id = $1", [listId]); // Get selected list
+    const itemsResult = await db.query("SELECT * FROM items WHERE list_id = $1 ORDER BY id ASC", 
       [listId]);
     const items = itemsResult.rows;
     console.log("Get items:", items); // Get tasks
@@ -60,7 +58,7 @@ app.post("/add", async (req, res) => {
   const listId = Number(req.body.list);
   try {
     console.log("Request body:", req.body);
-    await pool.query("INSERT INTO items (title, list_id) VALUES ($1, $2)",[item, listId]);
+    await db.query("INSERT INTO items (title, list_id) VALUES ($1, $2)",[item, listId]);
     res.redirect("/?list=" + listId);
   } catch(err) {
     console.log(err);
@@ -76,7 +74,7 @@ app.post("/edit", async (req, res) => {
   console.log("listId:", listId)
 
   try {
-    await pool.query("UPDATE items SET title = ($1) WHERE id = ($2)", [editTitle, editId]);
+    await db.query("UPDATE items SET title = ($1) WHERE id = ($2)", [editTitle, editId]);
     res.redirect("/?list=" + listId);
   } catch(err) {
     console.log(err);
@@ -91,7 +89,7 @@ app.post("/delete", async (req, res) => {
   console.log("ListId:", listId);
   
   try {
-    await pool.query("DELETE FROM items WHERE id = $1", [deleteId]);
+    await db.query("DELETE FROM items WHERE id = $1", [deleteId]);
     res.redirect("/?list=" + listId);
   } catch(err) {
     console.log(err);
@@ -113,7 +111,7 @@ app.post("/new", async (req, res) => {
   const name = req.body.name; 
   const color = req.body.color; 
 
-  const newList = await pool.query(
+  const newList = await db.query(
     "INSERT INTO lists (name, color) VALUES ($1, $2) RETURNING *;",
     [name, color]
   );
