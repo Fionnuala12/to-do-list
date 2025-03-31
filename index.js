@@ -1,9 +1,9 @@
 import express from "express";
 import bodyParser from "body-parser";
-import pkg from "pg";
+import pg from "pg";
 import 'dotenv/config';
 
-const { Pool } = pkg;
+const { Pool } = pg;
 
 const pool = new Pool ({ 
   connectionString: process.env.DATABASE_URL,
